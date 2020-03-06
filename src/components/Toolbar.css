@@ -1,0 +1,31 @@
+.toolbar {
+    background-color: darkslategray;
+    width: 50px;
+    height: 200px;
+    position: absolute;
+    top: calc(50% - 150px);
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid lightsteelblue;
+    border-radius: 10px;
+    z-index: 999;
+}
+.ui-item {
+    border: 1px solid white;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: black;
+    cursor: pointer;
+    margin: 10px 0;
+    background-color: white;
+}
+.ui-item.active{
+    color: white;
+    background-color: black;
+}
