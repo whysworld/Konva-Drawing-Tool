@@ -50,17 +50,35 @@ const TextWidget = ({
         }}
         onTransform={e =>{
           const node = shapeRef.current;
-          onChange(
-            {
-              ...shapeProps,
-              x: node.x(),
-              y: node.y(),
-              wrap: "char",
-              width: node.width() * node.scaleX()/node.scaleY(),
-              scaleX: 1
-            },
-            node.scaleX(node.scaleY())
-          );
+          const scaleX = (node.scaleX()).toString();
+          const scaleY = (node.scaleY()).toString();
+          console.log(scaleX, scaleY);
+          console.log("eee",e);
+          if (scaleX.slice(0,scaleX.length-2) !== scaleY.slice(0,scaleX.length-2)) {
+            console.log("here is not");
+            onChange(
+              {
+                ...shapeProps,
+                x: node.x(),
+                y: node.y(),
+                wrap: "char",
+                width: node.width() * node.scaleX()/node.scaleY(),
+              },
+              node.scaleX(node.scaleY())
+            );
+          }else{
+            console.log("here is yes");
+            onChange(
+              {
+                ...shapeProps,
+                x: node.x(),
+                y: node.y(),
+                scaleX: node.scaleX(),
+                scaleY: node.scaleY(),
+                wrap: "char",
+              }, 
+            );
+          }
         }}
         onTransformEnd={e => {
           const node = shapeRef.current;
