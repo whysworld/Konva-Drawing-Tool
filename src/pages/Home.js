@@ -161,7 +161,7 @@ class Home extends Component {
           newWidth += 1;
         }
         console.log(newWidth);
-        textarea.style.width = newWidth + "px";
+        textarea.style.width = newWidth + 10 + "px";
       }
 
       textarea.addEventListener("keydown", function(e) {

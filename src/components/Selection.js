@@ -64,7 +64,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange, onDragging, onT
         {isSelected && (
           <Transformer
             ref={trRef}
-            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
+            enabledAnchors={['middle-left', 'middle-right']}
             boundBoxFunc={(oldBox, newBox) => {
               // limit resize
               if (newBox.width < 5 || newBox.height < 5) {
