@@ -16,6 +16,7 @@ class Home extends Component {
       isDrawing: false,
       isDrawingMode: true,
       isDrawingText: false,
+      isEditingText: false,
 
       isDrawingRectangle: false,
       rectangleMode: false,
@@ -45,23 +46,26 @@ class Home extends Component {
   }
   //draw text
   addText = (stage, layer) => {
+    stage.on("dblclick", e => {
+      console.log(e.target);
+    });
     stage.on("click touchstart", e => {
       if (this.state.activeTool != "text") {
         return;
       }
-      if(!this.state.canDraw) return;
+      if (!this.state.canDraw) return;
       let pos = stage.getPointerPosition();
 
       const newShapes = this.state.shapes.slice();
 
       newShapes.push({
+        id: newShapes.length - 1,
         type: "text",
         text: "",
         x: pos.x,
         y: pos.y + 10,
         fontSize: 30,
-        scaleX: 1,
-
+        scaleX: 1
       });
       let textNode = newShapes[newShapes.length - 1];
 
@@ -126,12 +130,12 @@ class Home extends Component {
         textarea.parentNode.removeChild(textarea);
         span.parentNode.removeChild(span);
         window.removeEventListener("click", handleOutsideClick);
-        console.log(textarea.value.length)
-        if(textarea.value.length>0){
-            newShapes[newShapes.length - 1].text = textNode.text;
-        }else{
-            newShapes.pop();
-            console.log(newShapes);
+        console.log(textarea.value.length);
+        if (textarea.value.length > 0) {
+          newShapes[newShapes.length - 1].text = textNode.text;
+        } else {
+          newShapes.pop();
+          console.log(newShapes);
         }
         // console.log($this.state);
         // const result = newShapes.filter(item=>item.text.length>0)
@@ -161,7 +165,7 @@ class Home extends Component {
           newWidth += 1;
         }
         console.log(newWidth);
-        textarea.style.width = newWidth + 10 + "px";
+        textarea.style.width = newWidth+10 + "px";
       }
 
       textarea.addEventListener("keydown", function(e) {
@@ -180,13 +184,13 @@ class Home extends Component {
         span.innerHTML = textarea.value;
         let width = span.offsetWidth;
         setTextareaWidth(width);
-        
       });
 
       function handleOutsideClick(e) {
         if (e.target !== textarea) {
           textNode.text = textarea.value;
-          newShapes[newShapes.length-1].text = textarea.value;
+          newShapes[newShapes.length - 1].text = textarea.value;
+          newShapes[newShapes.length - 1].id = newShapes.length - 1;
           removeTextarea();
         }
       }
@@ -205,10 +209,12 @@ class Home extends Component {
       }
     });
 
-    stage.on("mousemove touchmove", () => {
+    stage.on("start touchmove", (e) => {
       if (this.state.activeTool != "text") {
         return;
       }
+      console.log(e.target);
+      console.log(e.target.width())
     });
   };
   //draw rectangle
@@ -294,10 +300,10 @@ class Home extends Component {
             // deselect when clicked on empty area
             const clickedOnEmpty = e.target === e.target.getStage();
             if (clickedOnEmpty) {
-              this.setState({ 
-                  selectedId: null, 
-                  canDraw: this.state.selectedId !== null ? false : true 
-            });
+              this.setState({
+                selectedId: null,
+                canDraw: this.state.selectedId !== null ? false : true
+              });
             }
           }}
         >
@@ -317,6 +323,7 @@ class Home extends Component {
                       this.setState({ canDraw: false });
                     }}
                     onSelect={() => {
+                      console.log(shape.id);
                       this.setState({ canDraw: false });
                       this.setState({ selectedId: shape.id });
                     }}
@@ -337,15 +344,20 @@ class Home extends Component {
                     key={i}
                     shapeProps={shape}
                     isSelected={shape.id === this.state.selectedId}
-                    onDragStart={()=>(this.setState({canDraw:false}))}
-                    onTransformStart={()=>(this.setState({canDraw:false}))}
-                    onMouseDown={()=>(this.setState({canDraw:false}))}
+                    onDragStart={() => this.setState({ canDraw: false })}
+                    onTransformStart={() => this.setState({ canDraw: false })}
+                    onMouseDown={() => this.setState({ canDraw: false })}
                     onSelect={() => {
+                      console.log(shape.id);
                       this.setState({ canDraw: false });
                       this.setState({ selectedId: shape.id });
                     }}
+                    onDBClick={() => {
+                      console.log("double clicked");
+                      this.setState({ canDraw: true, isEditingText: true, selectedId: null });
+                    }}
                     onChange={newAttrs => {
-                        console.log(newAttrs);
+                      console.log(newAttrs);
                       this.setState({ canDraw: true });
                       const shapes = this.state.shapes.slice();
                       shapes[i] = newAttrs;

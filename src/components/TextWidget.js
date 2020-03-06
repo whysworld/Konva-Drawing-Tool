@@ -8,7 +8,8 @@ const TextWidget = ({
   onChange,
   onMouseDown,
   onDragStart,
-  onTransformStart
+  onTransformStart,
+  onDBClick
 }) => {
   const shapeRef = React.useRef();
   const trRef = React.useRef();
@@ -30,6 +31,13 @@ const TextWidget = ({
         ref={shapeRef}
         {...shapeProps}
         draggable
+        onDblClick={e =>{
+         onDBClick({
+           ...shapeProps,
+           x: e.target.x(),
+           y: e.target.y(),
+         })
+        }}
         onMouseDown={onMouseDown}
         onDragStart={onDragStart}
         onTransformStart={onTransformStart}
@@ -39,6 +47,20 @@ const TextWidget = ({
             x: e.target.x(),
             y: e.target.y()
           });
+        }}
+        onTransform={e =>{
+          const node = shapeRef.current;
+          onChange(
+            {
+              ...shapeProps,
+              x: node.x(),
+              y: node.y(),
+              wrap: "char",
+              width: node.width() * node.scaleX()/node.scaleY(),
+              scaleX: 1
+            },
+            node.scaleX(node.scaleY())
+          );
         }}
         onTransformEnd={e => {
           const node = shapeRef.current;
@@ -53,7 +75,7 @@ const TextWidget = ({
                 ...shapeProps,
                 x: node.x(),
                 y: node.y(),
-                wrap: "word",
+                wrap: "char",
                 width: node.width() * node.scaleX()/node.scaleY(),
               },
               node.scaleX(node.scaleY())
@@ -67,7 +89,7 @@ const TextWidget = ({
                 y: node.y(),
                 scaleX: node.scaleX(),
                 scaleY: node.scaleY(),
-                wrap: "word",
+                wrap: "char",
               }, 
             );
           }
@@ -77,8 +99,6 @@ const TextWidget = ({
         <Transformer
           ref={trRef}
           enabledAnchors={["middle-left", "middle-right", "bottom-right"]}
-          anchorFill="red"
-          anchorSize={10}
           resizeEnabled={true}
           boundBoxFunc={(oldBox, newBox) => {
             newBox.width = Math.max(30, newBox.width);
