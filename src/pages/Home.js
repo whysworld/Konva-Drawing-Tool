@@ -31,11 +31,9 @@ class Home extends Component {
     this.layerTextEl = React.createRef();
   }
   handleChangeTool = e => {
-    console.log(e);
     this.setState({
       activeTool: e
     });
-    console.log(this.state.activeTool);
   };
   componentDidMount() {
     this.addRectangle(
@@ -47,7 +45,6 @@ class Home extends Component {
   //draw text
   addText = (stage, layer) => {
     stage.on("dblclick", e => {
-      console.log(e.target);
     });
     stage.on("click touchstart", e => {
       if (this.state.activeTool != "text") {
@@ -130,16 +127,12 @@ class Home extends Component {
         textarea.parentNode.removeChild(textarea);
         span.parentNode.removeChild(span);
         window.removeEventListener("click", handleOutsideClick);
-        console.log(textarea.value.length);
         if (textarea.value.length > 0) {
           newShapes[newShapes.length - 1].text = textNode.text;
         } else {
           newShapes.pop();
-          console.log(newShapes);
         }
-        // console.log($this.state);
         // const result = newShapes.filter(item=>item.text.length>0)
-        // console.log(result);
         $this.setState({
           shapes: newShapes
         });
@@ -164,7 +157,6 @@ class Home extends Component {
         if (isEdge) {
           newWidth += 1;
         }
-        console.log(newWidth);
         textarea.style.width = newWidth+10 + "px";
       }
 
@@ -213,15 +205,12 @@ class Home extends Component {
       if (this.state.activeTool != "text") {
         return;
       }
-      console.log(e.target);
-      console.log(e.target.width())
     });
   };
   //draw rectangle
   addRectangle = (stage, layer) => {
     stage.on("mousedown touchstart", e => {
       // start rectangle drawing
-      console.log(this.state);
       if (this.state.activeTool !== "selection") {
         return;
       }
@@ -232,7 +221,6 @@ class Home extends Component {
       // add a new rectangle at the mouse position with 0 width and height,
       // and set isDrawingRectangle to true
       const newShapes = this.state.shapes.slice();
-      console.log(newShapes);
 
       newShapes.push({
         type: "selection",
@@ -249,7 +237,6 @@ class Home extends Component {
     stage.on("mouseup touchend", () => {
       // end rectangle drawing
       // if we are drawing a shape, mouse unclick finishes the drawing
-      console.log(this.state.isDrawingRectangle);
       if (this.state.isDrawingRectangle) {
         this.setState({
           isDrawingRectangle: false
@@ -268,7 +255,6 @@ class Home extends Component {
 
       if (this.state.isDrawingRectangle) {
         const currentShapeIndex = this.state.shapes.length - 1;
-        // console.log('currentShapeIndex: ' + currentShapeIndex);
         const currShape = this.state.shapes[currentShapeIndex];
         const newWidth = pos.x - currShape.x;
         const newHeight = pos.y - currShape.y;
@@ -323,7 +309,6 @@ class Home extends Component {
                       this.setState({ canDraw: false });
                     }}
                     onSelect={() => {
-                      console.log(shape.id);
                       this.setState({ canDraw: false });
                       this.setState({ selectedId: shape.id });
                     }}
@@ -348,19 +333,17 @@ class Home extends Component {
                     onTransformStart={() => this.setState({ canDraw: false })}
                     onMouseDown={() => this.setState({ canDraw: false })}
                     onSelect={() => {
-                      console.log(shape.id);
                       this.setState({ canDraw: false });
                       this.setState({ selectedId: shape.id });
                     }}
                     onDBClick={() => {
-                      console.log("double clicked");
                       this.setState({ canDraw: true, isEditingText: true, selectedId: null });
                     }}
                     onChange={newAttrs => {
-                      console.log(newAttrs);
                       this.setState({ canDraw: true });
                       const shapes = this.state.shapes.slice();
                       shapes[i] = newAttrs;
+                      console.log("----new",newAttrs)
                       this.setState({ shapes: shapes });
                     }}
                   />

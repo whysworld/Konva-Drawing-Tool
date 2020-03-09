@@ -23,11 +23,11 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange, onDragging, onT
           {...shapeProps}
           draggable
           onDragEnd={e => {
-            onChange({
-              ...shapeProps,
-              x: e.target.x(),
-              y: e.target.y()
-            });
+            // onChange({
+            //   ...shapeProps,
+            //   x: e.target.x(),
+            //   y: e.target.y()
+            // });
           }}
           onDragStart={e =>{
             onDragging({
@@ -64,6 +64,7 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange, onDragging, onT
         {isSelected && (
           <Transformer
             ref={trRef}
+            anchorCornerRadius={5}
             enabledAnchors={['middle-left', 'middle-right', 'top-left', 'top-right', 'bottom-left', 'bottom-right']}
             boundBoxFunc={(oldBox, newBox) => {
               // limit resize

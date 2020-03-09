@@ -42,20 +42,18 @@ const TextWidget = ({
         onDragStart={onDragStart}
         onTransformStart={onTransformStart}
         onDragEnd={e => {
-          onChange({
-            ...shapeProps,
-            x: e.target.x(),
-            y: e.target.y()
-          });
+          // onChange({
+          //   ...shapeProps,
+          //   x: node.x(),
+          //   y: node.y()
+          // });
         }}
+        on
         onTransform={e =>{
           const node = shapeRef.current;
           const scaleX = (node.scaleX()).toString();
           const scaleY = (node.scaleY()).toString();
-          console.log(scaleX, scaleY);
-          console.log("eee",e);
           if (scaleX.slice(0,scaleX.length-2) !== scaleY.slice(0,scaleX.length-2)) {
-            console.log("here is not");
             onChange(
               {
                 ...shapeProps,
@@ -63,43 +61,12 @@ const TextWidget = ({
                 y: node.y(),
                 wrap: "char",
                 width: node.width() * node.scaleX()/node.scaleY(),
+                scaleX11: node.scaleX(),
+                scaleY11: node.scaleY()
               },
               node.scaleX(node.scaleY())
             );
           }else{
-            console.log("here is yes");
-            onChange(
-              {
-                ...shapeProps,
-                x: node.x(),
-                y: node.y(),
-                scaleX: node.scaleX(),
-                scaleY: node.scaleY(),
-                wrap: "char",
-              }, 
-            );
-          }
-        }}
-        onTransformEnd={e => {
-          const node = shapeRef.current;
-          const scaleX = (node.scaleX()).toString();
-          const scaleY = (node.scaleY()).toString();
-          console.log(scaleX, scaleY);
-          console.log("eee",e);
-          if (scaleX.slice(0,scaleX.length-2) !== scaleY.slice(0,scaleX.length-2)) {
-            console.log("here is not");
-            onChange(
-              {
-                ...shapeProps,
-                x: node.x(),
-                y: node.y(),
-                wrap: "char",
-                width: node.width() * node.scaleX()/node.scaleY(),
-              },
-              node.scaleX(node.scaleY())
-            );
-          }else{
-            console.log("here is yes");
             onChange(
               {
                 ...shapeProps,
@@ -116,10 +83,15 @@ const TextWidget = ({
       {isSelected && (
         <Transformer
           ref={trRef}
+          anchorCornerRadius={5}
+          keepRatio={true}
           enabledAnchors={["middle-left", "middle-right", "bottom-right"]}
           resizeEnabled={true}
           boundBoxFunc={(oldBox, newBox) => {
-            newBox.width = Math.max(30, newBox.width);
+            // limit resize
+            if (newBox.width < 8 || newBox.height < 8) {
+              return oldBox;
+            }
             return newBox;
           }}
         />
