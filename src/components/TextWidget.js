@@ -89,7 +89,7 @@ const TextWidget = ({
           resizeEnabled={true}
           boundBoxFunc={(oldBox, newBox) => {
             // limit resize
-            if (newBox.width < 8 || newBox.height < 8) {
+            if (newBox.width < 15 || newBox.height < 15) {
               return oldBox;
             }
             return newBox;
