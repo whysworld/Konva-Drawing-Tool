@@ -178,8 +178,6 @@ class Home extends Component {
       textarea.addEventListener("input", function(e) {
         span.innerHTML = textarea.value;
         var width = span.offsetWidth;
-        console.log(width);
-        console.log(width,pos.x,stage.width());
         if (pos.x + width >= stage.width()) {
           width = stage.width() - pos.x - 10;
           textarea.style.height = "auto";
@@ -361,7 +359,6 @@ class Home extends Component {
                       this.setState({ canDraw: true });
                       const shapes = this.state.shapes.slice();
                       shapes[i] = newAttrs;
-                      console.log("----new", newAttrs);
                       this.setState({ shapes: shapes });
                     }}
                   />
