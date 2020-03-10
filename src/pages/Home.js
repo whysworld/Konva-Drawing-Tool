@@ -44,8 +44,7 @@ class Home extends Component {
   }
   //draw text
   addText = (stage, layer) => {
-    stage.on("dblclick", e => {
-    });
+    stage.on("dblclick", e => {});
     stage.on("click touchstart", e => {
       if (this.state.activeTool != "text") {
         return;
@@ -77,6 +76,8 @@ class Home extends Component {
       span.style.width = "auto";
       span.style.fontSize = "30px";
       span.style.position = "absolute";
+      span.style.top = pos.y - 50 + "px";
+      span.style.left = pos.x + "px";
 
       span.style.visibility = "hidden";
       span.style.left = pos.x + "px";
@@ -157,15 +158,17 @@ class Home extends Component {
         if (isEdge) {
           newWidth += 1;
         }
-        textarea.style.width = newWidth+10 + "px";
+        textarea.style.width = newWidth + 10 + "px";
       }
-
+      var resizeTextarea = function(el) {};
       textarea.addEventListener("keydown", function(e) {
         // hide on enter
         // but don't hide on shift + enter
         if (e.keyCode === 13 && !e.shiftKey) {
-          textNode.text = textarea.value;
-          removeTextarea();
+          // textNode.text = textarea.value;
+          // removeTextarea();
+          // var br = document.createElement("div");
+          // span.prepend(br);
         }
         // on esc do not set value back to node
         if (e.keyCode === 27) {
@@ -174,8 +177,17 @@ class Home extends Component {
       });
       textarea.addEventListener("input", function(e) {
         span.innerHTML = textarea.value;
-        let width = span.offsetWidth;
-        setTextareaWidth(width);
+        var width = span.offsetWidth;
+        console.log(width);
+        console.log(width,pos.x,stage.width());
+        if (pos.x + width >= stage.width()) {
+          width = stage.width() - pos.x - 10;
+          textarea.style.height = "auto";
+          textarea.style.height = textarea.scrollHeight + "px";
+          setTextareaWidth(width);
+        }
+        else
+          setTextareaWidth(width);
       });
 
       function handleOutsideClick(e) {
@@ -183,6 +195,8 @@ class Home extends Component {
           textNode.text = textarea.value;
           newShapes[newShapes.length - 1].text = textarea.value;
           newShapes[newShapes.length - 1].id = newShapes.length - 1;
+          newShapes[newShapes.length - 1].width = textarea.offsetWidth;
+          $this.setState({shapes:newShapes});
           removeTextarea();
         }
       }
@@ -201,7 +215,7 @@ class Home extends Component {
       }
     });
 
-    stage.on("start touchmove", (e) => {
+    stage.on("start touchmove", e => {
       if (this.state.activeTool != "text") {
         return;
       }
@@ -337,13 +351,17 @@ class Home extends Component {
                       this.setState({ selectedId: shape.id });
                     }}
                     onDBClick={() => {
-                      this.setState({ canDraw: true, isEditingText: true, selectedId: null });
+                      this.setState({
+                        canDraw: true,
+                        isEditingText: true,
+                        selectedId: null
+                      });
                     }}
                     onChange={newAttrs => {
                       this.setState({ canDraw: true });
                       const shapes = this.state.shapes.slice();
                       shapes[i] = newAttrs;
-                      console.log("----new",newAttrs)
+                      console.log("----new", newAttrs);
                       this.setState({ shapes: shapes });
                     }}
                   />
